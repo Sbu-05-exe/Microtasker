@@ -1,2 +1,7 @@
 # Microtasker
-A todolist.
+A python todolist
+
+pre-requisites
+-Python
+-OOP
+-tkinter
