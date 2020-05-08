@@ -1,27 +1,36 @@
 import tkinter as tk
 from tkinter import ttk
 
-class Application(tk.Frame):
-	def __init__(self, master = None):
-		super().__init__(master)
-		self.master = master
-		self.pack()
-		self.createDashboard()
+class App():
+	def __init__(self):
+		self.window = tk.Tk()
+		self.window.title('MicroTasker')
+		self.window.state('zoomed')
+		self.h, self.w = self.window.winfo_screenheight(), self.window.winfo_screenwidth()
 
-	def createDashboard(self):
-		pass
-		# self.menu = createMenu()
-		# menu.pack(side='left')
+		self.frm_menu = self.create_menu()
+		self.frm_todo = self.create_todo_frame()
 
-		# self.todoFrame = createTodoFrame()
-		# menu.pack(side='right') 
- 
+		self.frm_menu.pack(side='left', expand=True, fill='both')
+		self.frm_todo.pack(side='right', expand=True, fill='both')
+
+	def run(self):
+		self.window.mainloop()
+
+	def create_menu(self):
+		my_frame = tk.Frame(self.window, bg='Red', height=self.h, width = (self.w*0.3))
+
+		
+		return my_frame
+
+	def create_todo_frame(self):
+		return tk.Frame(self.window, bg='Blue', width=(self.w*0.7))
+
 
 def main():
-	root = tk.Tk()
 
-	app = Application(master=root)
-	app.mainloop()
+	app = App()
+	app.run()
 
 if __name__ == '__main__':
 	main()
