@@ -6,6 +6,22 @@ light_red = '#ff2211'
 
 my_todos = ['Check','me','out'] 
 
+class Task(tk.Frame):
+	def __init__(self,parent, task):
+		super().__init__(parent)
+
+		lbl_todo = tk.Label(self, text=task)
+		lbl_todo.pack(side='left')
+
+		btn_done = ttk.Button(self, command=self.remove_task, text='done')
+		btn_done.pack(side='right')
+
+		self.task = task
+
+	def remove_task(self):
+		index = my_todos.remove(self.task)
+		print(my_todos)
+		self.destroy()
 
 class App():
 	def __init__(self):
@@ -16,10 +32,10 @@ class App():
 		self.todo = StringVar()
 
 		self.frm_menu = self.create_menu()
-		self.frm_todo, self.frm_todo_list = self.create_todo_frame()
+		self.dashboard, self.frm_todos = self.create_dashboard()
 
 		self.frm_menu.place(relx=0, rely=0, relwidth= 0.3, relheight=1)
-		self.frm_todo.place(relx=0.3, rely=0, relwidth= 0.7, relheight=1)
+		self.dashboard.place(relx=0.3, rely=0, relwidth= 0.7, relheight=1)
 
 	def run(self):
 		self.window.mainloop()
@@ -35,16 +51,16 @@ class App():
 		
 		return frm_menu
 
-	def create_todo_frame(self):
-		frm_todo = tk.Frame(self.window)
+	def create_dashboard(self):
+		frm_dashboard = tk.Frame(self.window)
 
 		# on the frm_todo
 
-		todo_text_frm = tk.Frame(frm_todo,background='#ababab')
+		todo_text_frm = tk.Frame(frm_dashboard,background='#ababab')
 		todo_text_frm.place(relwidth=1, relheight=0.3, rely=0)
 
-		frm_todo_list = tk.Frame(frm_todo,background='#bababa')
-		frm_todo_list.place(relwidth=1, relheight=0.7,rely=0.3)
+		frm_todos = tk.Frame(frm_dashboard,background='#bababa')
+		frm_todos.place(relwidth=1, relheight=0.7,rely=0.3)
 
 		# Inside the text frame
 
@@ -57,40 +73,32 @@ class App():
 		btn_add = ttk.Button(todo_text_frm, text ='+', command=self.add_todo)
 		btn_add.place(relx=0.7, rely= 0.5, relheigh=0.3)
 
-		self.show_todos(frm_todo_list)
+		self.show_todos(frm_todos)
 
-		return frm_todo, frm_todo_list
+		return frm_dashboard, frm_todos
 
 	def show_todos(self, frame):
 
 		i = 0
 
-		for task in my_todos:
-			todo_frame = tk.Frame(frame)
-			todo_frame.place(relx=0.2,rely = 0.1 + i)
+		# clear the contents of the frame
+		for child in frame.winfo_children():
+			child.destroy()
 
-			lbl_task = tk.Label(todo_frame, text=task)
-			lbl_task.pack(side='left')
+		# add padding to the todo_frm using ttk
+		pad_frm = tk.Frame(frame)
+		pad_frm.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
-			# border radius
-			btn_del = ttk.Button(todo_frame, text='Done', command=self.remove_todo)
-			btn_del.pack(side='right')
-			btn_del.bind('Button>', self.remove_todo)
-
-			i+= 0.1
+		for todo in my_todos:
+			task_frm = Task(pad_frm, todo)
+			task_frm.pack(side='top')
 
 	def add_todo(self):
 		todo = self.todo.get()
 		my_todos.append(todo)
 
 		self.todo.set('')
-		self.show_todos(self.frm_todo_list)
-
-		return frm_todo
-
-	def remove_todo(task):
-		print(type(task))
-		pass
+		self.show_todos(self.frm_todos)
 
 def main():
 	app = App()
